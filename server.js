@@ -5,6 +5,18 @@ const collectibles = [
     { name: 'vintage 1970s yogurt SOLD AS-IS', price: 0.99 }
   ];
 
+
+  const shoes = [
+    { name: "Birkenstocks", price: 50, type: "sandal" },
+    { name: "Air Jordans", price: 500, type: "sneaker" },
+    { name: "Air Mahomeses", price: 501, type: "sneaker" },
+    { name: "Utility Boots", price: 20, type: "boot" },
+    { name: "Velcro Sandals", price: 15, type: "sandal" },
+    { name: "Jet Boots", price: 1000, type: "boot" },
+    { name: "Fifty-Inch Heels", price: 175, type: "heel" }
+];
+
+
 // import express 
 const express = require('express')
 const morgan = require('morgan')
@@ -22,11 +34,11 @@ app.get('/greetings/:name', (req, res) => {
 app.get('/roll/:number', (req, res) => {
 
     let num = req.params.number
-    if (isNaN(num)){
+    if (isNaN(num)){ //if a number
         res.send(`<h2>You must specify a number.</h2>`)
     }else{
-        num = parseInt(Math.random() * num)
-    res.send(`<h2>You rolled a ${num}</h2>`)
+        num = parseInt(Math.random() * num) // make into int
+        res.send(`<h2>You rolled a ${num}</h2>`)
     }
 });
 
@@ -42,9 +54,32 @@ app.get('/collectibles/:number', (req, res) => {
 
 
 });
+
+app.get('/shoes', (req, res) => {
+
+    let minPrice = parseInt(req.query['min-price'])
+    let maxPrice = parseInt(req.query['max-price'])
+    let type = req.query.type 
+    let filteredShoe;
+
+    if (minPrice){
+        filteredShoe = shoes.filter(shoe => shoe.price >= minPrice)
+    }
+
+    if (maxPrice){
+        filteredShoe = shoes.filter(shoe => shoe.price <= maxPrice)
+    }
+
+    if (type){
+        filteredShoe = shoes.filter(shoe => shoe.type === type)
+    }
+    res.send(filteredShoe)
+
+});
+
+
+
 //listening on port 
-
-
 app.listen(3000, () => {
     console.log('listening on port 3000')
 })
